@@ -1,21 +1,21 @@
 import { ConfigService } from '@nestjs/config';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CreateAccountCommand } from 'src/models/commands/create.account.command';
+import { CreateUserCommand } from 'src/models/commands/create.user.command';
 import { HttpService } from 'src/service/http/http.service';
 
-@CommandHandler(CreateAccountCommand)
-export class CreateAccountCommandHandler
-  implements ICommandHandler<CreateAccountCommand>
+@CommandHandler(CreateUserCommand)
+export class CreateUserCommandHandler
+  implements ICommandHandler<CreateUserCommand>
 {
   constructor(
     private readonly httpService: HttpService,
     private readonly config: ConfigService,
   ) {}
 
-  async execute(command: CreateAccountCommand): Promise<any> {
+  async execute(command: CreateUserCommand): Promise<any> {
     try {
       const { data } = await this.httpService.post(
-        `${this.config.get('API_AUTH')}register`,
+        this.config.get('API_USERS'),
         command,
       );
       return data;
