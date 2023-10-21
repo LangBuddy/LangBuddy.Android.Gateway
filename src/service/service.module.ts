@@ -4,6 +4,7 @@ import { HttpService } from './http/http.service';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CreateAccountCommandHandler } from './auth/commands/create.account.command.handler';
 import { CreateUserCommandHandler } from './auth/commands/create.user.command.handler';
+import { UpdateAccountAddUserIdHandler } from './auth/commands/update.account.add.userid.handler';
 
 @Module({
   imports: [CqrsModule],
@@ -12,6 +13,7 @@ import { CreateUserCommandHandler } from './auth/commands/create.user.command.ha
     HttpService,
     CreateAccountCommandHandler,
     CreateUserCommandHandler,
+    UpdateAccountAddUserIdHandler,
   ],
   exports: [AuthService],
 })

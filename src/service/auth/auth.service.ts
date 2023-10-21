@@ -3,13 +3,15 @@ import { RegisterRequest } from 'src/models/requests/register.request';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateAccountCommand } from 'src/models/commands/create.account.command';
 import { CreateUserCommand } from 'src/models/commands/create.user.command';
+import { UpdateAccountAddUserIdCommand } from 'src/models/commands/update.account.add.userid.command';
+import { HttpResponse } from 'src/models/responses/http.response';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly commandBus: CommandBus) {}
 
   async registration(registerRequest: RegisterRequest) {
-    await this.commandBus.execute(
+    const accountId = await this.commandBus.execute(
       new CreateAccountCommand(
         registerRequest.nickname,
         registerRequest.email,
@@ -17,7 +19,7 @@ export class AuthService {
       ),
     );
 
-    await this.commandBus.execute(
+    const userId = await this.commandBus.execute(
       new CreateUserCommand(
         registerRequest.firstName,
         registerRequest.lastName,
@@ -25,5 +27,13 @@ export class AuthService {
         registerRequest.gender,
       ),
     );
+
+    const res = await this.commandBus.execute(
+      new UpdateAccountAddUserIdCommand(accountId, userId),
+    );
+
+    return new HttpResponse(true, 'Successful registration', {
+      id: res,
+    });
   }
 }

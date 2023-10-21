@@ -1,6 +1,8 @@
 import { ConfigService } from '@nestjs/config';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { AxiosError } from 'axios';
 import { CreateUserCommand } from 'src/models/commands/create.user.command';
+import { HttpResponse } from 'src/models/responses/http.response';
 import { HttpService } from 'src/service/http/http.service';
 
 @CommandHandler(CreateUserCommand)
@@ -14,14 +16,16 @@ export class CreateUserCommandHandler
 
   async execute(command: CreateUserCommand): Promise<any> {
     try {
-      const { data } = await this.httpService.post(
+      const res = await this.httpService.post<HttpResponse>(
         this.config.get('API_USERS'),
         command,
       );
-      return data;
+
+      return res.data.id;
     } catch (e) {
-      console.log(e);
-      throw new Error((e as Error).message);
+      throw new Error(
+        (e as AxiosError<HttpResponse, HttpResponse>).response.data.message,
+      );
     }
   }
 }
