@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  getway-api:
+    container_name: 'getway-api'
+    build:
+      dockerfile: Dockerfile
+      context: .
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    ports:
+      - *
+    environment:
+      - LOGS_PATH=/var/log/dev-getway-api
+      - API_AUTH=${API_AUTH}
+      - API_USERS=${API_USERS}
+      - API_ACCOUNTS=${API_ACCOUNTS}
+    networks:
+      - getway-deb
+      - lang-buddy
+
+networks:
+  getway-deb: {
+    driver: bridge
+  }
+  lang-buddy:
+    external: true
