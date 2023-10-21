@@ -1,5 +1,6 @@
 import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { LoginRequest } from 'src/models/requests/login.request';
 import { RegisterRequest } from 'src/models/requests/register.request';
 import { HttpResponse } from 'src/models/responses/http.response';
 import { AuthService } from 'src/service/auth/auth.service';
@@ -22,6 +23,22 @@ export class AuthController {
   ): Promise<void> {
     try {
       const result = await this.authService.registration(registerRequest);
+      res.status(200).json(result);
+    } catch (e) {
+      res.status(400).json(new HttpResponse(false, (e as Error).message, null));
+    }
+  }
+
+  @Post('login')
+  @ApiOperation({ summary: 'Login account' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Success',
+  })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
+  async login(@Res() res, @Body() loginRequest: LoginRequest) {
+    try {
+      const result = await this.authService.login(loginRequest);
       res.status(200).json(result);
     } catch (e) {
       res.status(400).json(new HttpResponse(false, (e as Error).message, null));

@@ -5,6 +5,8 @@ import { CreateAccountCommand } from 'src/models/commands/create.account.command
 import { CreateUserCommand } from 'src/models/commands/create.user.command';
 import { UpdateAccountAddUserIdCommand } from 'src/models/commands/update.account.add.userid.command';
 import { HttpResponse } from 'src/models/responses/http.response';
+import { LoginRequest } from 'src/models/requests/login.request';
+import { AuthenticationCommand } from 'src/models/commands/authentication.command';
 
 @Injectable()
 export class AuthService {
@@ -35,5 +37,12 @@ export class AuthService {
     return new HttpResponse(true, 'Successful registration', {
       id: res,
     });
+  }
+
+  async login(loginRequest: LoginRequest) {
+    const res = await this.commandBus.execute(
+      new AuthenticationCommand(loginRequest.email, loginRequest.password),
+    );
+    return new HttpResponse(true, 'Successful registration', res);
   }
 }

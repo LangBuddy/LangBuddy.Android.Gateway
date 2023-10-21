@@ -1,27 +1,29 @@
 import { ConfigService } from '@nestjs/config';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { AxiosError } from 'axios';
-import { CreateAccountCommand } from 'src/models/commands/create.account.command';
-import { CreateAccountResponse } from 'src/models/responses/create.account.response';
+import { AuthenticationCommand } from 'src/models/commands/authentication.command';
+import { AuthenticationResponse } from 'src/models/responses/authentication.response';
 import { HttpResponse } from 'src/models/responses/http.response';
 import { HttpService } from 'src/service/http/http.service';
 
-@CommandHandler(CreateAccountCommand)
-export class CreateAccountCommandHandler
-  implements ICommandHandler<CreateAccountCommand>
+@CommandHandler(AuthenticationCommand)
+export class AuthenticationHandler
+  implements ICommandHandler<AuthenticationCommand>
 {
   constructor(
     private readonly httpService: HttpService,
     private readonly config: ConfigService,
   ) {}
 
-  async execute(command: CreateAccountCommand): Promise<number> {
+  async execute(
+    command: AuthenticationCommand,
+  ): Promise<AuthenticationResponse> {
     try {
       const res = await this.httpService.post<
-        HttpResponse<CreateAccountResponse>
-      >(`${this.config.get('API_AUTH')}register`, command);
+        HttpResponse<AuthenticationResponse>
+      >(`${this.config.get('API_AUTH')}login`, command);
 
-      return res.data.id;
+      return res.data;
     } catch (e) {
       console.log('error', e);
       throw new Error((e as AxiosError<HttpResponse>).response.data.message);

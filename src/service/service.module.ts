@@ -5,6 +5,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { CreateAccountCommandHandler } from './auth/commands/create.account.command.handler';
 import { CreateUserCommandHandler } from './auth/commands/create.user.command.handler';
 import { UpdateAccountAddUserIdHandler } from './auth/commands/update.account.add.userid.handler';
+import { AuthenticationHandler } from './auth/commands/authentication.handler';
 
 @Module({
   imports: [CqrsModule],
@@ -14,6 +15,7 @@ import { UpdateAccountAddUserIdHandler } from './auth/commands/update.account.ad
     CreateAccountCommandHandler,
     CreateUserCommandHandler,
     UpdateAccountAddUserIdHandler,
+    AuthenticationHandler,
   ],
   exports: [AuthService],
 })

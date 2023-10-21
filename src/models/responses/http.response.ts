@@ -1,7 +1,7 @@
-export class HttpResponse {
+export class HttpResponse<T = void> {
   constructor(
     public success: boolean,
     public message: string,
-    public data?: any,
+    public data?: T,
   ) {}
 }

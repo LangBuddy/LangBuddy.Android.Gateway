@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Users Api')
+    .setTitle('Lang Buddy Api')
     .setVersion('1.0')
     .build();
 
